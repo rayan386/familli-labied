@@ -1,1 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>لوحة الأدمن - العائلة</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<h2>لوحة إدارة العائلة</h2>
+<button onclick="logout()">خروج</button>
+
+<div class="add-user">
+  <h3>إضافة عضو جديد</h3>
+  <input type="text" id="newUser" placeholder="اسم المستخدم">
+  <input type="password" id="newPass" placeholder="كلمة المرور">
+  <input type="text" id="newFull" placeholder="الاسم الكامل">
+  <input type="text" id="newRole" placeholder="الدور (جد، أم، ابن...)">
+  <input type="text" id="newBio" placeholder="نبذة قصيرة">
+  <input type="file" id="newPhoto">
+  <button onclick="addUser()">إضافة</button>
+  <p id="msg" class="error"></p>
+</div>
+
+<div class="users-list">
+  <h3>أعضاء العائلة الحاليين</h3>
+  <ul id="userList"></ul>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+function addUser(){
+    const username = document.getElementById('newUser').value;
+    const password = document.getElementById('newPass').value;
+    const fullname = document.getElementById('newFull').value;
+    const role = document.getElementById('newRole').value;
+    const bio = document.getElementById('newBio').value;
+    const msg = document.getElementById('msg');
+
+    // رفع الصورة كـ Base64
+    const file = document.getElementById('newPhoto').files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = function(e){
+            const photo = e.target.result;
+            if(createUser(username,password,fullname,role,bio,photo)){
+                msg.innerText = 'تم الإضافة بنجاح';
+                renderUsers();
+            } else msg.innerText = 'اسم المستخدم موجود بالفعل';
+        }
+        reader.readAsDataURL(file);
+    } else {
+        if(createUser(username,password,fullname,role,bio,"")){
+            msg.innerText = 'تم الإضافة بنجاح';
+            renderUsers();
+        } else msg.innerText = 'اسم المستخدم موجود بالفعل';
+    }
+}
+
+function renderUsers(){
+    const ul = document.getElementById('userList');
+    ul.innerHTML='';
+    getAllUsers().forEach(u=>{
+        ul.innerHTML+=`<li>${u.fullname} (${u.role})</li>`;
+    });
+}
+
+if(!currentUser() || currentUser().role!=='أدمن') window.location.href='index.html';
+
+renderUsers();
+</script>
+</body>
+</html>
 
