@@ -1,1 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>تسجيل الدخول - العائلة</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="login-box">
+  <h2>تسجيل الدخول للعائلة</h2>
+  <input type="text" id="username" placeholder="اسم المستخدم">
+  <input type="password" id="password" placeholder="كلمة المرور">
+  <button onclick="login()">دخول</button>
+  <p id="msg" class="error"></p>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+function login(){
+    const u = document.getElementById("username").value;
+    const p = document.getElementById("password").value;
+    const msg = document.getElementById("msg");
+    if(authLogin(u,p)){
+        if(u==='admin') window.location.href = 'admin.html';
+        else window.location.href = 'family.html';
+    } else {
+        msg.innerText = 'اسم المستخدم أو كلمة المرور غير صحيحة!';
+    }
+}
+</script>
+</body>
+</html>
 
