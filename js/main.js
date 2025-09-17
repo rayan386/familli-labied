@@ -57,4 +57,12 @@ function getAllUsers(){
         return {...info, username};
     });
 }
+// عند إنشاء مستخدم جديد (من الأدمن)
+function createUser(username,password,fullname,role,bio,photoArray,year){
+    const data = getData();
+    if(data.users[username]) return false;
+    data.users[username]={password,fullname,role,bio,photos:photoArray || [], year:year || ''};
+    saveData(data);
+    return true;
+}
 
