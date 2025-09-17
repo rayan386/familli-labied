@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>ملف العضو</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<h1 id="memberName"></h1>
+<p id="memberRole"></p>
+<p id="memberYear"></p>
+<p id="memberBio"></p>
+<button onclick="goBack()">عودة</button>
+
+<!-- معرض الصور -->
+<div id="photoGrid" class="photo-grid"></div>
+
+<!-- نافذة تكبير الصور -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <img id="lightboxImg">
+</div>
+
+<script src="js/main.js"></script>
+<script>
+if(!currentUser()) window.location.href='index.html';
+
+const username = localStorage.getItem('selectedUser');
+if(!username) window.location.href='family.html';
+
+const data = getData();
+const member = data.users[username];
+
+// عرض معلومات العضو
+document.getElementById('memberName').innerText = member.fullname;
+document.getElementById('memberRole').innerText = member.role;
+document.getElementById('memberYear').innerText = member.year || '';
+document.getElementById('memberBio').innerText = member.bio;
+
+// عرض الصور
+const grid = document.getElementById('photoGrid');
+if(member.photos){
+    member.photos.forEach(p=>{
+        const img = document.createElement('img');
+        img.src = p;
+        img.onclick = ()=>openLightbox(p);
+        grid.appendChild(img);
+    });
+}
+
+// وظائف العودة و Lightbox
+function goBack(){ window.location.href='family.html'; }
+function openLightbox(src){ document.getElementById('lightboxImg').src=src; document.getElementById('lightbox').style.display='block'; }
+function closeLightbox(){ document.getElementById('lightbox').style.display='none'; }
+</script>
+</body>
+</html>
