@@ -2,34 +2,62 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>العائلة</title>
+<title>العائلة - الصفحة الرئيسية</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<h2>أهلاً بك في صفحة العائلة</h2>
+<h1>صفحة العائلة</h1>
 <button onclick="logout()">خروج</button>
+
+<!-- محرك البحث -->
+<input type="text" id="searchBox" placeholder="ابحث بالاسم أو الدور أو السنة..." oninput="searchMembers(this.value)">
+
+<!-- حاوية البطاقات -->
 <div id="familyCards" class="cards"></div>
 
 <script src="js/main.js"></script>
 <script>
 if(!currentUser()) window.location.href='index.html';
 
-function renderFamily(){
+// عرض كل الأعضاء بشكل افتراضي
+renderFamily(getAllUsers());
+
+// البحث
+function searchMembers(query){
+    const all = getAllUsers();
+    const results = all.filter(u => 
+        u.fullname.includes(query) || 
+        u.role.includes(query) || 
+        (u.year && u.year.includes(query))
+    );
+    renderFamily(results);
+}
+
+// عرض البطاقات
+function renderFamily(members){
     const container = document.getElementById('familyCards');
-    container.innerHTML='';
-    getAllUsers().forEach(u=>{
+    container.innerHTML = '';
+    // فرز حسب السنة من الأقدم للأحدث
+    members.sort((a,b)=> (a.year||0) - (b.year||0));
+    members.forEach(u => {
         const card = document.createElement('div');
         card.className='card';
-        card.innerHTML=`
-            ${u.photo? `<img src="${u.photo}" class="avatar">`:''}
+        card.innerHTML = `
+            ${u.photo ? `<img src="${u.photo}" class="avatar">` : ''}
             <h3>${u.fullname}</h3>
             <p>${u.role}</p>
-            <p>${u.bio}</p>
+            ${u.year ? `<p>مواليد: ${u.year}</p>` : ''}
+            <button onclick="openProfilePage('${u.username}')">عرض الملف</button>
         `;
         container.appendChild(card);
     });
 }
-renderFamily();
+
+// فتح صفحة الملف
+function openProfilePage(username){
+    localStorage.setItem('selectedUser', username);
+    window.location.href = 'profile.html';
+}
 </script>
 </body>
 </html>
