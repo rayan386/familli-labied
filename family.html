@@ -1,1 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>العائلة</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<h2>أهلاً بك في صفحة العائلة</h2>
+<button onclick="logout()">خروج</button>
+<div id="familyCards" class="cards"></div>
+
+<script src="js/main.js"></script>
+<script>
+if(!currentUser()) window.location.href='index.html';
+
+function renderFamily(){
+    const container = document.getElementById('familyCards');
+    container.innerHTML='';
+    getAllUsers().forEach(u=>{
+        const card = document.createElement('div');
+        card.className='card';
+        card.innerHTML=`
+            ${u.photo? `<img src="${u.photo}" class="avatar">`:''}
+            <h3>${u.fullname}</h3>
+            <p>${u.role}</p>
+            <p>${u.bio}</p>
+        `;
+        container.appendChild(card);
+    });
+}
+renderFamily();
+</script>
+</body>
+</html>
 
