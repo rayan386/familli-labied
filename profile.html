@@ -1,56 +1,537 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>ملف العضو</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الموقع العائلي - KSS</title>
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --family-gradient: linear-gradient(135deg, #4e54c8, #8f94fb);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #fdfbfb, #ebedee);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        /* التصميم العام */
+        .kss-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* الهيدر */
+        .kss-header {
+            background: var(--family-gradient);
+            color: white;
+            padding: 20px 0;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeInDown 1s ease;
+        }
+
+        .kss-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .kss-logo {
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .kss-logo i {
+            margin-right: 10px;
+            font-size: 32px;
+        }
+
+        /* محرك البحث */
+        .kss-search-container {
+            position: relative;
+            width: 50%;
+        }
+
+        .kss-search-box {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .kss-search-box:focus {
+            outline: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .kss-search-btn {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .kss-search-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        /* شبكة البروفايلات */
+        .kss-profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .kss-profile-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .kss-profile-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .kss-profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            transition: all 0.3s ease;
+        }
+
+        .kss-profile-card:hover .kss-profile-img {
+            transform: scale(1.1);
+            border-color: var(--secondary);
+        }
+
+        .kss-profile-info {
+            padding: 15px;
+        }
+
+        .kss-profile-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .kss-profile-age {
+            color: var(--accent);
+            font-size: 16px;
+        }
+
+        /* تفاصيل البروفايل */
+        .kss-profile-details {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: modalFadeIn 0.5s ease;
+        }
+
+        .kss-details-header {
+            background: var(--family-gradient);
+            padding: 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .kss-details-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .kss-details-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .kss-details-content {
+            padding: 30px;
+        }
+
+        .kss-details-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .kss-details-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--light);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .kss-details-name {
+            font-size: 28px;
+            margin-top: 15px;
+            color: var(--primary);
+        }
+
+        .kss-details-age {
+            font-size: 20px;
+            color: var(--accent);
+        }
+
+        .kss-details-bio {
+            margin: 20px 0;
+            line-height: 1.6;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .kss-details-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .kss-gallery-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .kss-gallery-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* الطبقة الشفافة */
+        .kss-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* الرسوم المتحركة */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* التكيف مع الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .kss-header-content {
+                flex-direction: column;
+            }
+            
+            .kss-search-container {
+                width: 100%;
+                margin-top: 20px;
+            }
+            
+            .kss-profiles-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+    </style>
 </head>
 <body>
-<h1 id="memberName"></h1>
-<p id="memberRole"></p>
-<p id="memberYear"></p>
-<p id="memberBio"></p>
-<button onclick="goBack()">عودة</button>
+    <div class="kss-container">
+        <!-- الهيدر -->
+        <header class="kss-header">
+            <div class="kss-header-content">
+                <div class="kss-logo">
+                    <i>👨‍👩‍👧‍👦</i> عائلتنا
+                </div>
+                <div class="kss-search-container">
+                    <input type="text" class="kss-search-box" placeholder="ابحث بالاسم أو العمر...">
+                    <button class="kss-search-btn">🔍</button>
+                </div>
+            </div>
+        </header>
 
-<!-- معرض الصور -->
-<div id="photoGrid" class="photo-grid"></div>
+        <!-- شبكة البروفايلات -->
+        <div class="kss-profiles-grid" id="kssProfilesGrid">
+            <!-- سيتم ملء هذا القسم ديناميكياً بالبيانات -->
+        </div>
+    </div>
 
-<!-- نافذة تكبير الصور -->
-<div id="lightbox" class="lightbox" onclick="closeLightbox()">
-    <img id="lightboxImg">
-</div>
+    <!-- تفاصيل البروفايل (ستظهر عند النقر على بروفايل) -->
+    <div class="kss-overlay" id="kssOverlay"></div>
+    <div class="kss-profile-details" id="kssProfileDetails">
+        <div class="kss-details-header">
+            <h2>معلومات العضو</h2>
+            <button class="kss-details-close" id="kssDetailsClose">×</button>
+        </div>
+        <div class="kss-details-content">
+            <div class="kss-details-profile">
+                <img src="" alt="صورة العضو" class="kss-details-img" id="kssDetailsImg">
+                <h2 class="kss-details-name" id="kssDetailsName">الاسم</h2>
+                <p class="kss-details-age" id="kssDetailsAge">العمر</p>
+            </div>
+            <p class="kss-details-bio" id="kssDetailsBio">وصف عن العضو...</p>
+            <h3>معرض الصور</h3>
+            <div class="kss-details-gallery" id="kssDetailsGallery">
+                <!-- سيتم ملء هذا القسم ديناميكياً -->
+            </div>
+        </div>
+    </div>
 
-<script src="js/main.js"></script>
-<script>
-if(!currentUser()) window.location.href='index.html';
+    <script>
+        // بيانات العائلة (يمكن استبدالها ببيانات حقيقية من قاعدة بيانات)
+        const familyMembers = [
+            {
+                id: 1,
+                name: "أحمد محمد",
+                age: "65 سنة",
+                image: "https://randomuser.me/api/portraits/men/75.jpg",
+                bio: "جد العائلة، يحب القراءة والزراعة. يعمل مهندساً متقاعداً ويقضي معظم وقته في العناية بالحديقة وقراءة الكتب.",
+                photos: [
+                    "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1497440001374-f5cccb02fbc3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ]
+            },
+            {
+                id: 2,
+                name: "فاطمة إبراهيم",
+                age: "60 سنة",
+                image: "https://randomuser.me/api/portraits/women/75.jpg",
+                bio: "جدة العائلة، تحب الطبخ والعناية بالأحفاد. تشتهر بأطباقها التقليدية اللذيذة وتحب مشاركة قصص الماضي مع الأحفاد.",
+                photos: [
+                    "https://images.unsplash.com/photo-1505935428862-770b6f24f629?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ]
+            },
+            {
+                id: 3,
+                name: "محمد أحمد",
+                age: "40 سنة",
+                image: "https://randomuser.me/api/portraits/men/35.jpg",
+                bio: "طبيب جراح، متزوج وله ثلاثة أطفال. يحب السفر والتصوير الفوتوغرافي.",
+                photos: [
+                    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ]
+            },
+            {
+                id: 4,
+                name: "سارة محمد",
+                age: "38 سنة",
+                image: "https://randomuser.me/api/portraits/women/35.jpg",
+                bio: "مهندسة معمارية، متزوجة ولديها طفلان. تحب الرسم والتخطيط العمراني.",
+                photos: [
+                    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1497440001374-f5cccb02fbc3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ]
+            },
+            {
+                id: 5,
+                name: "علي محمد",
+                age: "35 سنة",
+                image: "https://randomuser.me/api/portraits/men/55.jpg",
+                bio: "مبرمج ومطور ويب، أعشق التكنولوجيا وكل ما هو جديد في عالم البرمجة.",
+                photos: [
+                    "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1497440001374-f5cccb02fbc3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ]
+            },
+            {
+                id: 6,
+                name: "لينا أحمد",
+                age: "32 سنة",
+                image: "https://randomuser.me/api/portraits/women/55.jpg",
+                bio: "مدرسة لغة عربية، أحب الأدب والشعر. أعطد دروساً خصوصية في اللغة العربية.",
+                photos: [
+                    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ]
+            },
+            {
+                id: 7,
+                name: "يوسف محمد",
+                age: "15 سنة",
+                image: "https://randomuser.me/api/portraits/men/15.jpg",
+                bio: "طالب في الصف العاشر، يحب كرة القدم وألعاب الفيديو. يطمح ليكون طبيباً في المستقبل.",
+                photos: [
+                    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1497440001374-f5cccb02fbc3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ]
+            },
+            {
+                id: 8,
+                name: "نور أحمد",
+                age: "12 سنة",
+                image: "https://randomuser.me/api/portraits/women/15.jpg",
+                bio: "طالبة في الصف السادس، تحب الرسم والرياضة. تشارك في العديد من المسابقات الفنية.",
+                photos: [
+                    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ]
+            }
+        ];
 
-const username = localStorage.getItem('selectedUser');
-if(!username) window.location.href='family.html';
+        // عرض البروفايلات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProfiles(familyMembers);
+            
+            // إضافة مستمع حدث للبحث
+            document.querySelector('.kss-search-box').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredMembers = familyMembers.filter(member => 
+                    member.name.toLowerCase().includes(searchTerm) || 
+                    member.age.includes(searchTerm)
+                );
+                renderProfiles(filteredMembers);
+            });
+            
+            // إغلاق تفاصيل البروفايل
+            document.getElementById('kssDetailsClose').addEventListener('click', closeProfileDetails);
+            document.getElementById('kssOverlay').addEventListener('click', closeProfileDetails);
+        });
 
-const data = getData();
-const member = data.users[username];
+        // دالة لعرض البروفايلات
+        function renderProfiles(members) {
+            const profilesGrid = document.getElementById('kssProfilesGrid');
+            profilesGrid.innerHTML = '';
+            
+            members.forEach(member => {
+                const profileCard = document.createElement('div');
+                profileCard.className = 'kss-profile-card';
+                profileCard.innerHTML = `
+                    <img src="${member.image}" alt="${member.name}" class="kss-profile-img">
+                    <div class="kss-profile-info">
+                        <div class="kss-profile-name">${member.name}</div>
+                        <div class="kss-profile-age">${member.age}</div>
+                    </div>
+                `;
+                
+                profileCard.addEventListener('click', () => showProfileDetails(member));
+                profilesGrid.appendChild(profileCard);
+            });
+        }
 
-// عرض معلومات العضو
-document.getElementById('memberName').innerText = member.fullname;
-document.getElementById('memberRole').innerText = member.role;
-document.getElementById('memberYear').innerText = member.year || '';
-document.getElementById('memberBio').innerText = member.bio;
+        // دالة لعرض تفاصيل البروفايل
+        function showProfileDetails(member) {
+            document.getElementById('kssDetailsImg').src = member.image;
+            document.getElementById('kssDetailsName').textContent = member.name;
+            document.getElementById('kssDetailsAge').textContent = member.age;
+            document.getElementById('kssDetailsBio').textContent = member.bio;
+            
+            const gallery = document.getElementById('kssDetailsGallery');
+            gallery.innerHTML = '';
+            
+            member.photos.forEach(photo => {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.alt = member.name;
+                img.className = 'kss-gallery-img';
+                gallery.appendChild(img);
+            });
+            
+            document.getElementById('kssOverlay').style.display = 'block';
+            document.getElementById('kssProfileDetails').style.display = 'block';
+        }
 
-// عرض الصور
-const grid = document.getElementById('photoGrid');
-if(member.photos){
-    member.photos.forEach(p=>{
-        const img = document.createElement('img');
-        img.src = p;
-        img.onclick = ()=>openLightbox(p);
-        grid.appendChild(img);
-    });
-}
-
-// وظائف العودة و Lightbox
-function goBack(){ window.location.href='family.html'; }
-function openLightbox(src){ document.getElementById('lightboxImg').src=src; document.getElementById('lightbox').style.display='block'; }
-function closeLightbox(){ document.getElementById('lightbox').style.display='none'; }
-</script>
+        // دالة لإغلاق تفاصيل البروفايل
+        function closeProfileDetails() {
+            document.getElementById('kssOverlay').style.display = 'none';
+            document.getElementById('kssProfileDetails').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
